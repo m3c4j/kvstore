@@ -5,6 +5,10 @@
 *.so
 *.dylib
 
+kvstore
+kvctl/kvctl
+kvd/kvd
+
 # Test binary, built with `go test -c`
 *.test
 
