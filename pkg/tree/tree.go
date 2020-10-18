@@ -21,22 +21,13 @@
 // SOFTWARE.
 //
 
-package main
+package tree
 
-import (
-	"os"
+// Tree for implement various of trees
+type Tree interface {
+	Put(key, value string) error
+	Get(key string) (string, error)
+	Delete(key string) error
 
-	"github.com/kvstore/kvd"
-	"github.com/kvstore/pkg/log"
-	"go.uber.org/zap"
-)
-
-func init() {
-	log.Init()
-}
-
-func main() {
-	zap.L().Fatal("Start KVStore failed",
-		zap.Error(kvd.Main(os.Args)),
-	)
+	Walk() error
 }

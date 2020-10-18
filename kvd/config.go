@@ -21,22 +21,47 @@
 // SOFTWARE.
 //
 
-package main
+package kvd
 
 import (
+	"flag"
+	"fmt"
 	"os"
-
-	"github.com/kvstore/kvd"
-	"github.com/kvstore/pkg/log"
-	"go.uber.org/zap"
 )
 
-func init() {
-	log.Init()
+type config struct {
+	flagSet *flag.FlagSet
+
+	version string
+
+	host string
+	port string
+
+	backend string
 }
 
-func main() {
-	zap.L().Fatal("Start KVStore failed",
-		zap.Error(kvd.Main(os.Args)),
-	)
+func newConfig() *config {
+	cfg := &config{}
+
+	cfg.flagSet = flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
+	cfg.flagSet.StringVar(&cfg.version, "version", "", "Print version code")
+	cfg.flagSet.StringVar(&cfg.host, "host", "127.0.0.1", "Specify host ip")
+	cfg.flagSet.StringVar(&cfg.port, "port", "8000", "Specify listen port")
+	cfg.flagSet.StringVar(&cfg.backend, "backend", "btree", "Specify which tree type")
+
+	return cfg
+}
+
+func (cfg *config) parse(arguments []string) error {
+	perr := cfg.flagSet.Parse(arguments)
+	switch perr {
+	case nil:
+	case flag.ErrHelp:
+		fmt.Println()
+		os.Exit(0)
+	default:
+		os.Exit(2)
+	}
+
+	return nil
 }

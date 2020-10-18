@@ -23,6 +23,13 @@ service KV {
             body: "*"
         };
     }
+
+    rpc Del(DelRequest) returns (DelResponse) {
+        option (google.api.http) = {
+            post: "/del"
+            body: "*"
+        };
+    }
 }
 
 message PutRequest {
@@ -39,6 +46,15 @@ message GetRequest {
 }
 
 message GetResponse {
+    bytes value = 1;
+    int64 count = 2;
+}
+
+message DelRequest {
+    bytes key = 1;
+}
+
+message DelResponse {
     bytes value = 1;
     int64 count = 2;
 }
