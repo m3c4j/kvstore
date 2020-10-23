@@ -21,7 +21,7 @@
 // SOFTWARE.
 //
 
-package tree
+package binary
 
 import (
 	"fmt"
@@ -111,8 +111,8 @@ func (b *Binary) Get(k string) (string, error) {
 	return "", fmt.Errorf("Key %s not found", k)
 }
 
-// Delete key-value from tree if exist
-func (b *Binary) Delete(key string) error {
+// Del key-value from tree if exist
+func (b *Binary) Del(key string) error {
 	return nil
 }
 

@@ -34,6 +34,8 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	pb "github.com/kvstore/api/kvserverpb"
 	"github.com/kvstore/pkg/tree"
+	"github.com/kvstore/pkg/tree/binary"
+	"github.com/kvstore/pkg/tree/redblack"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
@@ -81,7 +83,7 @@ type kvServer struct {
 func (s *kvServer) Put(ctx context.Context, req *pb.PutRequest) (*pb.PutResponse, error) {
 	zap.L().Debug("Trigger Put method")
 	s.tree.Put(string(req.GetKey()), string(req.GetValue()))
-	s.tree.Walk()
+	// s.tree.Walk()
 	return &pb.PutResponse{Value: req.GetValue()}, nil
 }
 
@@ -104,11 +106,11 @@ func newKVServer(cfg *config) *kvServer {
 
 	switch cfg.backend {
 	case "binary":
-		s.tree = &tree.Binary{}
+		s.tree = &binary.Binary{}
 		zap.L().Info("Using binary search tree as backend")
 	default:
-		s.tree = &tree.Binary{}
-		zap.L().Info("No backend specified, using binary search tree as default")
+		s.tree = redblack.New()
+		zap.L().Info("No backend specified, using red-black tree as default")
 	}
 
 	return &s
